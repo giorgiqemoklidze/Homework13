@@ -12,13 +12,13 @@ import com.example.homework13.databinding.ItemNewsRecyclerviewLayoutBinding
 
 
 
-class NewsRecyclerViewAdapter( private val recyclerView: RecyclerView) : RecyclerView.Adapter<NewsRecyclerViewAdapter.WallPostsViewHolder>() {
+class NewsRecyclerViewAdapter( ) : RecyclerView.Adapter<NewsRecyclerViewAdapter.WallPostsViewHolder>() {
 
     val news = mutableListOf<NewsModel>()
 
     private lateinit var model: NewsModel
 
-    var isScrolling = false
+
 
 
 
@@ -45,7 +45,15 @@ class NewsRecyclerViewAdapter( private val recyclerView: RecyclerView) : Recycle
     }
 
 
+    fun delete(){
+        this.news.clear()
+        notifyDataSetChanged()
+    }
 
+    fun paginationSetData(items : MutableList<NewsModel>){
+        this.news.addAll(items)
+        notifyDataSetChanged()
+    }
 
         fun setData(items : MutableList<NewsModel>){
         this.news.clear()

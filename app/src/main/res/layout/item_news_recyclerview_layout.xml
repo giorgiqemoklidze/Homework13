@@ -39,14 +39,6 @@
             android:textSize="15sp"
             android:textStyle="bold" />
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:indeterminateTintMode="src_atop"
-            app:layout_constraintBottom_toBottomOf="@+id/newsRecyclerView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+
     </LinearLayout>
 </LinearLayout>

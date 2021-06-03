@@ -9,13 +9,12 @@ import kotlinx.coroutines.launch
 
 class NewsViewModel : ViewModel() {
 
-    private val itemsLiveData = MutableLiveData<List<NewsModel>>().apply {
+    private val itemsLiveData = MutableLiveData<Result<List<NewsModel>>>().apply {
         mutableListOf<NewsModel>()
     }
 
-    val _itemsLiveData : MutableLiveData<List<NewsModel>> = itemsLiveData
+    val _itemsLiveData : MutableLiveData<Result<List<NewsModel>>> = itemsLiveData
 
-    private val loading = MutableLiveData<Boolean>()
 
     fun init(){
         CoroutineScope(Dispatchers.IO).launch {
@@ -29,9 +28,9 @@ class NewsViewModel : ViewModel() {
 
         if (itemsList.isSuccessful){
             val news = itemsList.body()
-            itemsLiveData.postValue(news)
+            itemsLiveData.postValue(Result.isSucsessfull(news!!))
         }else {
-            itemsList.code()
+            itemsLiveData.postValue(Result.error("ragaca_eroriaaa"))
         }
 
 
