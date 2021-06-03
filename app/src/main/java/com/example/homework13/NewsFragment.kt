@@ -24,9 +24,7 @@ class NewsFragment : Fragment() {
 
     private var isScroling = false
 
-     var currentItems :Int = 7
-     var totalItems :Int = 10
-     var scrollOUtItems :Int = 3
+
 
 
     private val viewModel: NewsViewModel by viewModels()
@@ -47,11 +45,11 @@ class NewsFragment : Fragment() {
     }
 
     private fun initRecycler(){
-
-        binding.newsRecyclerView.layoutManager = LinearLayoutManager(binding.root.context, LinearLayoutManager.VERTICAL, false)
+        val manager =  LinearLayoutManager(binding.root.context, LinearLayoutManager.VERTICAL, false)
+        binding.newsRecyclerView.layoutManager = manager
         newsRecyclerViewAdapter = NewsRecyclerViewAdapter()
         binding.newsRecyclerView.adapter = newsRecyclerViewAdapter
-        val manager = LinearLayoutManager(binding.root.context, LinearLayoutManager.VERTICAL, false)
+
         observes()
         binding.newsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -66,17 +64,36 @@ class NewsFragment : Fragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
+                var currentItems :Int = manager.childCount
+                var totalItems :Int = manager.itemCount
+                var scrollOUtItems :Int = manager.findFirstVisibleItemPosition()
 
-                currentItems = manager.childCount
-                totalItems = manager.itemCount
-                scrollOUtItems = manager.findFirstVisibleItemPosition()
 
 
                 if (isScroling && (currentItems + scrollOUtItems == totalItems)){
+                    binding.progressbar.visibility = View.VISIBLE
 
+
+
+                    viewModel._itemsLiveData.observe(viewLifecycleOwner, Observer {
+
+                        when(it.status){
+                            Result.Status.SUCCESS ->{
+                                newsRecyclerViewAdapter.paginationSetData(it.data!!.toMutableList())
+                                binding.progressbar.visibility = View.GONE
+                            }
+
+                            Result.Status.ERROR ->{
+                                Toast.makeText(requireActivity(),it.message,Toast.LENGTH_LONG).show()
+
+                            }
+
+                        }
+
+                    })
                     isScroling = false
 
-                    newsRecyclerViewAdapter.delete()
+
 
                 }
 
